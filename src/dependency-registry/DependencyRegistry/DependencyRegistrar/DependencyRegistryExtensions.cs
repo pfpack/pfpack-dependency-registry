@@ -12,8 +12,15 @@ namespace PrimeFuncPack
             IServiceCollection services)
             where T : class
             =>
-            new(
-                services ?? throw new ArgumentNullException(nameof(services)),
-                dependency ?? throw new ArgumentNullException(nameof(dependency)));
+            InternalToRegistrar(
+                dependency ?? throw new ArgumentNullException(nameof(dependency)),
+                services ?? throw new ArgumentNullException(nameof(services)));
+
+        private static DependencyRegistrar<T> InternalToRegistrar<T>(
+            Dependency<T> dependency,
+            IServiceCollection services)
+            where T : class
+            =>
+            new(services, dependency.Resolve);
     }
 }
