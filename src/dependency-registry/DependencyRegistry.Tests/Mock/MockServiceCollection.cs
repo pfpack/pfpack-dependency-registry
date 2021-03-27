@@ -6,7 +6,7 @@ using System;
 
 namespace PrimeFuncPack.DependencyRegistry.Tests
 {
-    internal sealed class MockServiceCollection
+    internal static class MockServiceCollection
     {
         public static Mock<IServiceCollection> CreateMock(
             Action<ServiceDescriptor>? callback = null)
@@ -14,7 +14,6 @@ namespace PrimeFuncPack.DependencyRegistry.Tests
             var mock = new Mock<IServiceCollection>();
 
             var m = mock.Setup(s => s.Add(It.IsAny<ServiceDescriptor>()));
-
             if (callback is object)
             {
                 _ = m.Callback(callback);
