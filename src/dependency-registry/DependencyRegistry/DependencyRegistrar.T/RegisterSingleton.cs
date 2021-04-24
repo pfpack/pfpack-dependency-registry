@@ -6,8 +6,6 @@ namespace PrimeFuncPack
 {
     partial class DependencyRegistrar<T>
     {
-        public IServiceCollection RegisterSingleton()
-            =>
-            services.AddSingleton(resolver);
+        public IServiceCollection RegisterSingleton() => services.AddSingleton(resolver);
     }
 }

@@ -7,9 +7,7 @@ namespace PrimeFuncPack
 {
     public static class DependencyRegistrar
     {
-        public static DependencyRegistrar<T> Create<T>(
-            IServiceCollection services,
-            Func<IServiceProvider, T> resolver)
+        public static DependencyRegistrar<T> Create<T>(IServiceCollection services, Func<IServiceProvider, T> resolver)
             where T : class
             =>
             new(

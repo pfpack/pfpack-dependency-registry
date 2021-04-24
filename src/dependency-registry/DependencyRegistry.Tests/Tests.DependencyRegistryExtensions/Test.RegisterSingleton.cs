@@ -9,21 +9,20 @@ using static PrimeFuncPack.UnitTest.TestData;
 
 namespace PrimeFuncPack.DependencyRegistry.Tests
 {
-    partial class DependencyRegistrarTest
+    partial class DependencyRegistryExtensionsTest
     {
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void RegisterSingleton_ExpectSourceServices(
-            bool isNotNull)
+        public void RegisterSingleton_ExpectSourceServices(bool isNotNull)
         {            
             var mockServices = MockServiceCollection.CreateMock();
             var sourceServices = mockServices.Object;
             
-            object regService = isNotNull ? new object() : null!;
-            var registrar = DependencyRegistrar.Create(
-                sourceServices,
-                _ => regService);
+            RefType regService = isNotNull ? MinusFifteenIdRefType : null!;
+            var dependency = Dependency.Create(_ => regService);
+
+            var registrar = dependency.ToRegistrar(sourceServices);
 
             var actualServices = registrar.RegisterSingleton();
             Assert.Same(sourceServices, actualServices);
@@ -32,14 +31,13 @@ namespace PrimeFuncPack.DependencyRegistry.Tests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void RegisterSingleton_ExpectCallAddSingletonOnce(
-            bool isNotNull)
+        public void RegisterSingleton_ExpectCallAddSingletonOnce(bool isNotNull)
         {
-            RecordType regService = isNotNull ? PlusFifteenIdLowerSomeStringNameRecord : null!;
+            object regService = isNotNull ? MinusFifteenIdNullNameRecord: null!;
             var mockServices = MockServiceCollection.CreateMock(
                 sd =>
                 {
-                    Assert.Equal(typeof(RecordType), sd.ServiceType);
+                    Assert.Equal(typeof(object), sd.ServiceType);
                     Assert.Equal(ServiceLifetime.Singleton, sd.Lifetime);
                     Assert.NotNull(sd.ImplementationFactory);
 
@@ -48,12 +46,11 @@ namespace PrimeFuncPack.DependencyRegistry.Tests
                 });
 
             var sourceServices = mockServices.Object;
-            
-            var registrar = DependencyRegistrar.Create(
-                sourceServices,
-                _ => regService);
+            var dependency = Dependency.Create(_ => regService);
 
+            var registrar = dependency.ToRegistrar(sourceServices);
             _ = registrar.RegisterSingleton();
+            
             mockServices.Verify(s => s.Add(It.IsAny<ServiceDescriptor>()), Times.Once);
         }
     }
