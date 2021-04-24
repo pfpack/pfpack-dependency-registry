@@ -9,38 +9,36 @@ using static PrimeFuncPack.UnitTest.TestData;
 
 namespace PrimeFuncPack.DependencyRegistry.Tests
 {
-    partial class DependencyRegistrarTest
+    partial class DependencyRegistryExtensionsTest
     {
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void RegisterTransient_ExpectSourceServices(
-            bool isNotNull)
+        public void RegisterScoped_ExpectSourceServices(bool isNotNull)
         {            
             var mockServices = MockServiceCollection.CreateMock();
             var sourceServices = mockServices.Object;
             
-            RecordType regService = isNotNull ? PlusFifteenIdSomeStringNameRecord : null!;
-            var registrar = DependencyRegistrar.Create(
-                sourceServices,
-                _ => regService);
+            RefType regService = isNotNull ? ZeroIdRefType : null!;
+            var dependency = Dependency.Create(_ => regService);
 
-            var actualServices = registrar.RegisterTransient();
+            var registrar = dependency.ToRegistrar(sourceServices);
+
+            var actualServices = registrar.RegisterScoped();
             Assert.Same(sourceServices, actualServices);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void RegisterTransient_ExpectCallAddTransientOnce(
-            bool isNotNull)
+        public void RegisterScoped_ExpectCallAddScopedOnce(bool isNotNull)
         {
-            RefType regService = isNotNull ? MinusFifteenIdRefType : null!;
+            RecordType regService = isNotNull ? MinusFifteenIdSomeStringNameRecord: null!;
             var mockServices = MockServiceCollection.CreateMock(
                 sd =>
                 {
-                    Assert.Equal(typeof(RefType), sd.ServiceType);
-                    Assert.Equal(ServiceLifetime.Transient, sd.Lifetime);
+                    Assert.Equal(typeof(RecordType), sd.ServiceType);
+                    Assert.Equal(ServiceLifetime.Scoped, sd.Lifetime);
                     Assert.NotNull(sd.ImplementationFactory);
 
                     var actualService = sd.ImplementationFactory!.Invoke(Mock.Of<IServiceProvider>());
@@ -48,12 +46,11 @@ namespace PrimeFuncPack.DependencyRegistry.Tests
                 });
 
             var sourceServices = mockServices.Object;
-            
-            var registrar = DependencyRegistrar.Create(
-                sourceServices,
-                _ => regService);
+            var dependency = Dependency.Create(_ => regService);
 
-            _ = registrar.RegisterTransient();
+            var registrar = dependency.ToRegistrar(sourceServices);
+            _ = registrar.RegisterScoped();
+            
             mockServices.Verify(s => s.Add(It.IsAny<ServiceDescriptor>()), Times.Once);
         }
     }

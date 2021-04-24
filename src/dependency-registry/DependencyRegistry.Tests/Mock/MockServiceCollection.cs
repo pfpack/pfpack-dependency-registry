@@ -8,8 +8,7 @@ namespace PrimeFuncPack.DependencyRegistry.Tests
 {
     internal static class MockServiceCollection
     {
-        public static Mock<IServiceCollection> CreateMock(
-            Action<ServiceDescriptor>? callback = null)
+        public static Mock<IServiceCollection> CreateMock(Action<ServiceDescriptor>? callback = null)
         {
             var mock = new Mock<IServiceCollection>();
 

@@ -12,9 +12,7 @@ namespace PrimeFuncPack
 
         private readonly Func<IServiceProvider, T> resolver;
 
-        internal DependencyRegistrar(
-            IServiceCollection services,
-            Func<IServiceProvider, T> resolver)
+        internal DependencyRegistrar(IServiceCollection services, Func<IServiceProvider, T> resolver)
         {
             this.services = services;
             this.resolver = resolver;
