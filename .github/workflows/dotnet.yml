@@ -1,0 +1,49 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master ]
+    
+  pull_request:
+    branches: [ master ]
+    
+  release:
+    types: [ published ]
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+        
+    - name: Create Local NuGet Directory
+      run: mkdir ~/nuget
+      
+    - name: Add Local Nuget Source
+      run: dotnet nuget add source ~/nuget
+      
+    - name: Restore DependencyRegistry
+      run: dotnet restore ./src/*/*/DependencyRegistry.csproj
+
+    - name: Build DependencyRegistry
+      run: dotnet build ./src/*/*/DependencyRegistry.csproj --no-restore
+
+    - name: Pack DependencyRegistry
+      run: dotnet pack ./src/*/*/DependencyRegistry.csproj --no-restore -o ~/nuget
+      
+    - name: Restore DependencyRegistry.Tests
+      run: dotnet restore ./src/*/*/DependencyRegistry.Tests.csproj
+
+    - name: Test DependencyRegistry.Tests
+      run: dotnet test ./src/*/*/DependencyRegistry.Tests.csproj --no-restore
+      
+    - name: Push Packages
+      if: ${{ github.event_name == 'release' }}
+      run: dotnet nuget push "../../../nuget/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetSourcePassword }} --skip-duplicate
