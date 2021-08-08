@@ -33,16 +33,16 @@ jobs:
       run: dotnet restore ./src/*/*/DependencyRegistry.csproj
 
     - name: Build DependencyRegistry
-      run: dotnet build ./src/*/*/DependencyRegistry.csproj --no-restore
+      run: dotnet build ./src/*/*/DependencyRegistry.csproj --no-restore  -c Release
 
     - name: Pack DependencyRegistry
-      run: dotnet pack ./src/*/*/DependencyRegistry.csproj --no-restore -o ~/nuget
+      run: dotnet pack ./src/*/*/DependencyRegistry.csproj --no-restore -o ~/nuget  -c Release
       
     - name: Restore DependencyRegistry.Tests
       run: dotnet restore ./src/*/*/DependencyRegistry.Tests.csproj
 
     - name: Test DependencyRegistry.Tests
-      run: dotnet test ./src/*/*/DependencyRegistry.Tests.csproj --no-restore
+      run: dotnet test ./src/*/*/DependencyRegistry.Tests.csproj --no-restore  -c Release
       
     - name: Push Packages
       if: ${{ github.event_name == 'release' }}
