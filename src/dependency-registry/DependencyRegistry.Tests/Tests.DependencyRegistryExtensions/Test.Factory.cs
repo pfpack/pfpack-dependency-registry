@@ -1,7 +1,6 @@
 #nullable enable
 
 using PrimeFuncPack.UnitTest;
-using System;
 using Xunit;
 using static PrimeFuncPack.UnitTest.TestData;
 
@@ -26,8 +25,7 @@ namespace PrimeFuncPack.DependencyRegistry.Tests
         [Fact]
         public void ToRegistrar_ServicesAreNull_ExpectArgumentNullException()
         {
-            var dependency = Dependency.Create(
-                _ => MinusFifteenIdSomeStringNameRecord);
+            var dependency = Dependency.Of(MinusFifteenIdSomeStringNameRecord);
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => _ = dependency.ToRegistrar(null!));

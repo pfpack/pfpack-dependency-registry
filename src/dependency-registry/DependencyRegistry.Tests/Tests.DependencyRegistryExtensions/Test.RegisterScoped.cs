@@ -3,7 +3,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using PrimeFuncPack.UnitTest;
-using System;
 using Xunit;
 using static PrimeFuncPack.UnitTest.TestData;
 
@@ -20,7 +19,7 @@ namespace PrimeFuncPack.DependencyRegistry.Tests
             var sourceServices = mockServices.Object;
             
             RefType regService = isNotNull ? ZeroIdRefType : null!;
-            var dependency = Dependency.Create(_ => regService);
+            var dependency = Dependency.Of(regService);
 
             var registrar = dependency.ToRegistrar(sourceServices);
 
@@ -46,7 +45,7 @@ namespace PrimeFuncPack.DependencyRegistry.Tests
                 });
 
             var sourceServices = mockServices.Object;
-            var dependency = Dependency.Create(_ => regService);
+            var dependency = Dependency.Of(regService);
 
             var registrar = dependency.ToRegistrar(sourceServices);
             _ = registrar.RegisterScoped();
