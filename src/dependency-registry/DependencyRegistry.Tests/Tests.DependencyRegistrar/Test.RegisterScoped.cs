@@ -5,46 +5,45 @@ using PrimeFuncPack.UnitTest;
 using Xunit;
 using static PrimeFuncPack.UnitTest.TestData;
 
-namespace PrimeFuncPack.DependencyRegistry.Tests
+namespace PrimeFuncPack.DependencyRegistry.Tests;
+
+partial class DependencyRegistrarTest
 {
-    partial class DependencyRegistrarTest
+    [Theory]
+    [InlineData(null)]
+    [InlineData(SomeString)]
+    public void RegisterScoped_ExpectSourceServices(string regService)
     {
-        [Theory]
-        [InlineData(null)]
-        [InlineData(SomeString)]
-        public void RegisterScoped_ExpectSourceServices(string regService)
-        {            
-            var mockServices = MockServiceCollection.CreateMock();
-            var sourceServices = mockServices.Object;
-            
-            var registrar = DependencyRegistrar.Create(sourceServices, _ => regService);
+        var mockServices = MockServiceCollection.CreateMock();
+        var sourceServices = mockServices.Object;
 
-            var actualServices = registrar.RegisterScoped();
-            Assert.Same(sourceServices, actualServices);
-        }
+        var registrar = DependencyRegistrar.Create(sourceServices, _ => regService);
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void RegisterScoped_ExpectCallAddScopedOnce(bool isNotNull)
-        {
-            RefType regService = isNotNull ? ZeroIdRefType : null!;
-            var mockServices = MockServiceCollection.CreateMock(
-                sd =>
-                {
-                    Assert.Equal(typeof(RefType), sd.ServiceType);
-                    Assert.Equal(ServiceLifetime.Scoped, sd.Lifetime);
-                    Assert.NotNull(sd.ImplementationFactory);
+        var actualServices = registrar.RegisterScoped();
+        Assert.Same(sourceServices, actualServices);
+    }
 
-                    var actualService = sd.ImplementationFactory!.Invoke(Mock.Of<IServiceProvider>());
-                    Assert.Equal(regService, actualService);
-                });
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void RegisterScoped_ExpectCallAddScopedOnce(bool isNotNull)
+    {
+        RefType regService = isNotNull ? ZeroIdRefType : null!;
+        var mockServices = MockServiceCollection.CreateMock(
+            sd =>
+            {
+                Assert.Equal(typeof(RefType), sd.ServiceType);
+                Assert.Equal(ServiceLifetime.Scoped, sd.Lifetime);
+                Assert.NotNull(sd.ImplementationFactory);
 
-            var sourceServices = mockServices.Object;
-            var registrar = DependencyRegistrar.Create(sourceServices, _ => regService);
+                var actualService = sd.ImplementationFactory!.Invoke(Mock.Of<IServiceProvider>());
+                Assert.Equal(regService, actualService);
+            });
 
-            _ = registrar.RegisterScoped();
-            mockServices.Verify(s => s.Add(It.IsAny<ServiceDescriptor>()), Times.Once);
-        }
+        var sourceServices = mockServices.Object;
+        var registrar = DependencyRegistrar.Create(sourceServices, _ => regService);
+
+        _ = registrar.RegisterScoped();
+        mockServices.Verify(s => s.Add(It.IsAny<ServiceDescriptor>()), Times.Once);
     }
 }
