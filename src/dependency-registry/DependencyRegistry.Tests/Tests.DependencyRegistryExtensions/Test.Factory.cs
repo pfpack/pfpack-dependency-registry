@@ -3,33 +3,32 @@ using PrimeFuncPack.UnitTest;
 using Xunit;
 using static PrimeFuncPack.UnitTest.TestData;
 
-namespace PrimeFuncPack.DependencyRegistry.Tests
+namespace PrimeFuncPack.DependencyRegistry.Tests;
+
+partial class DependencyRegistryExtensionsTest
 {
-    partial class DependencyRegistryExtensionsTest
+    [Fact]
+    public void ToRegistrar_DependencyIsNull_ExpectArgumentNullException()
     {
-        [Fact]
-        public void ToRegistrar_DependencyIsNull_ExpectArgumentNullException()
-        {
-            var mockServices = MockServiceCollection.CreateMock();
-            var sourceServices = mockServices.Object;
+        var mockServices = MockServiceCollection.CreateMock();
+        var sourceServices = mockServices.Object;
 
-            Dependency<RefType> dependency = null!;
+        Dependency<RefType> dependency = null!;
 
-            var ex = Assert.Throws<ArgumentNullException>(
-                () => _ = dependency.ToRegistrar(sourceServices));
+        var ex = Assert.Throws<ArgumentNullException>(
+            () => _ = dependency.ToRegistrar(sourceServices));
 
-            Assert.Equal("dependency", ex.ParamName);
-        }
+        Assert.Equal("dependency", ex.ParamName);
+    }
 
-        [Fact]
-        public void ToRegistrar_ServicesAreNull_ExpectArgumentNullException()
-        {
-            var dependency = Dependency.Of(MinusFifteenIdSomeStringNameRecord);
+    [Fact]
+    public void ToRegistrar_ServicesAreNull_ExpectArgumentNullException()
+    {
+        var dependency = Dependency.Of(MinusFifteenIdSomeStringNameRecord);
 
-            var ex = Assert.Throws<ArgumentNullException>(
-                () => _ = dependency.ToRegistrar(null!));
+        var ex = Assert.Throws<ArgumentNullException>(
+            () => _ = dependency.ToRegistrar(null!));
 
-            Assert.Equal("services", ex.ParamName);
-        }
+        Assert.Equal("services", ex.ParamName);
     }
 }

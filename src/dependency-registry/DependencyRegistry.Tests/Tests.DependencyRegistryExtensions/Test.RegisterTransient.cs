@@ -5,51 +5,50 @@ using PrimeFuncPack.UnitTest;
 using Xunit;
 using static PrimeFuncPack.UnitTest.TestData;
 
-namespace PrimeFuncPack.DependencyRegistry.Tests
+namespace PrimeFuncPack.DependencyRegistry.Tests;
+
+partial class DependencyRegistryExtensionsTest
 {
-    partial class DependencyRegistryExtensionsTest
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void RegisterTransient_ExpectSourceServices(bool isNotNull)
     {
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void RegisterTransient_ExpectSourceServices(bool isNotNull)
-        {            
-            var mockServices = MockServiceCollection.CreateMock();
-            var sourceServices = mockServices.Object;
-            
-            RecordType regService = isNotNull ? ZeroIdNullNameRecord : null!;
-            var dependency = Dependency.Of(regService);
+        var mockServices = MockServiceCollection.CreateMock();
+        var sourceServices = mockServices.Object;
 
-            var registrar = dependency.ToRegistrar(sourceServices);
+        RecordType regService = isNotNull ? ZeroIdNullNameRecord : null!;
+        var dependency = Dependency.Of(regService);
 
-            var actualServices = registrar.RegisterTransient();
-            Assert.Same(sourceServices, actualServices);
-        }
+        var registrar = dependency.ToRegistrar(sourceServices);
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void RegisterTransient_ExpectCallAddTransientOnce(bool isNotNull)
-        {
-            string regService = isNotNull ? LowerSomeString: null!;
-            var mockServices = MockServiceCollection.CreateMock(
-                sd =>
-                {
-                    Assert.Equal(typeof(string), sd.ServiceType);
-                    Assert.Equal(ServiceLifetime.Transient, sd.Lifetime);
-                    Assert.NotNull(sd.ImplementationFactory);
+        var actualServices = registrar.RegisterTransient();
+        Assert.Same(sourceServices, actualServices);
+    }
 
-                    var actualService = sd.ImplementationFactory!.Invoke(Mock.Of<IServiceProvider>());
-                    Assert.Equal(regService, actualService);
-                });
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void RegisterTransient_ExpectCallAddTransientOnce(bool isNotNull)
+    {
+        string regService = isNotNull ? LowerSomeString : null!;
+        var mockServices = MockServiceCollection.CreateMock(
+            sd =>
+            {
+                Assert.Equal(typeof(string), sd.ServiceType);
+                Assert.Equal(ServiceLifetime.Transient, sd.Lifetime);
+                Assert.NotNull(sd.ImplementationFactory);
 
-            var sourceServices = mockServices.Object;            
-            var dependency = Dependency.Of(regService);
+                var actualService = sd.ImplementationFactory!.Invoke(Mock.Of<IServiceProvider>());
+                Assert.Equal(regService, actualService);
+            });
 
-            var registrar = dependency.ToRegistrar(sourceServices);
-            _ = registrar.RegisterTransient();
-            
-            mockServices.Verify(s => s.Add(It.IsAny<ServiceDescriptor>()), Times.Once);
-        }
+        var sourceServices = mockServices.Object;
+        var dependency = Dependency.Of(regService);
+
+        var registrar = dependency.ToRegistrar(sourceServices);
+        _ = registrar.RegisterTransient();
+
+        mockServices.Verify(s => s.Add(It.IsAny<ServiceDescriptor>()), Times.Once);
     }
 }

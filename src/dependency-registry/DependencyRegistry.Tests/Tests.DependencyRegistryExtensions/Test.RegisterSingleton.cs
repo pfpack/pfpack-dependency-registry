@@ -5,51 +5,50 @@ using PrimeFuncPack.UnitTest;
 using Xunit;
 using static PrimeFuncPack.UnitTest.TestData;
 
-namespace PrimeFuncPack.DependencyRegistry.Tests
+namespace PrimeFuncPack.DependencyRegistry.Tests;
+
+partial class DependencyRegistryExtensionsTest
 {
-    partial class DependencyRegistryExtensionsTest
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void RegisterSingleton_ExpectSourceServices(bool isNotNull)
     {
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void RegisterSingleton_ExpectSourceServices(bool isNotNull)
-        {            
-            var mockServices = MockServiceCollection.CreateMock();
-            var sourceServices = mockServices.Object;
-            
-            RefType regService = isNotNull ? MinusFifteenIdRefType : null!;
-            var dependency = Dependency.Of(regService);
+        var mockServices = MockServiceCollection.CreateMock();
+        var sourceServices = mockServices.Object;
 
-            var registrar = dependency.ToRegistrar(sourceServices);
+        RefType regService = isNotNull ? MinusFifteenIdRefType : null!;
+        var dependency = Dependency.Of(regService);
 
-            var actualServices = registrar.RegisterSingleton();
-            Assert.Same(sourceServices, actualServices);
-        }
+        var registrar = dependency.ToRegistrar(sourceServices);
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void RegisterSingleton_ExpectCallAddSingletonOnce(bool isNotNull)
-        {
-            object regService = isNotNull ? MinusFifteenIdNullNameRecord: null!;
-            var mockServices = MockServiceCollection.CreateMock(
-                sd =>
-                {
-                    Assert.Equal(typeof(object), sd.ServiceType);
-                    Assert.Equal(ServiceLifetime.Singleton, sd.Lifetime);
-                    Assert.NotNull(sd.ImplementationFactory);
+        var actualServices = registrar.RegisterSingleton();
+        Assert.Same(sourceServices, actualServices);
+    }
 
-                    var actualService = sd.ImplementationFactory!.Invoke(Mock.Of<IServiceProvider>());
-                    Assert.Equal(regService, actualService);
-                });
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void RegisterSingleton_ExpectCallAddSingletonOnce(bool isNotNull)
+    {
+        object regService = isNotNull ? MinusFifteenIdNullNameRecord : null!;
+        var mockServices = MockServiceCollection.CreateMock(
+            sd =>
+            {
+                Assert.Equal(typeof(object), sd.ServiceType);
+                Assert.Equal(ServiceLifetime.Singleton, sd.Lifetime);
+                Assert.NotNull(sd.ImplementationFactory);
 
-            var sourceServices = mockServices.Object;
-            var dependency = Dependency.Of(regService);
+                var actualService = sd.ImplementationFactory!.Invoke(Mock.Of<IServiceProvider>());
+                Assert.Equal(regService, actualService);
+            });
 
-            var registrar = dependency.ToRegistrar(sourceServices);
-            _ = registrar.RegisterSingleton();
-            
-            mockServices.Verify(s => s.Add(It.IsAny<ServiceDescriptor>()), Times.Once);
-        }
+        var sourceServices = mockServices.Object;
+        var dependency = Dependency.Of(regService);
+
+        var registrar = dependency.ToRegistrar(sourceServices);
+        _ = registrar.RegisterSingleton();
+
+        mockServices.Verify(s => s.Add(It.IsAny<ServiceDescriptor>()), Times.Once);
     }
 }
