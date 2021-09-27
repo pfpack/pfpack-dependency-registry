@@ -2,11 +2,11 @@ name: .NET
 
 on:
   push:
-    branches: [ feature/*, master ]
-    
+    branches: [ master, dev, feature/*, fix/*, release/* ]
+
   pull_request:
     branches: [ master ]
-    
+
   release:
     types: [ published ]
     branches: [ master ]
@@ -23,13 +23,13 @@ jobs:
       with:
         dotnet-version: 6.0.x
         include-prerelease: true
-        
+
     - name: Create Local NuGet Directory
       run: mkdir ~/nuget
-      
+
     - name: Add Local Nuget Source
       run: dotnet nuget add source ~/nuget
-      
+
     - name: Restore DependencyRegistry
       run: dotnet restore ./src/*/*/DependencyRegistry.csproj
 

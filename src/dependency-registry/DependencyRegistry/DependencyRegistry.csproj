@@ -4,15 +4,15 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Authors>Andrei Sergeev, Pavel Moskovoy</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Description>PrimeFuncPack: A Functional Programming Pack for .NET</Description>
+    <Authors>Andrei Sergeev, Pavel Moskovoy</Authors>
     <Copyright>Copyright © 2020-2021 Andrei Sergeev, Pavel Moskovoy</Copyright>
+    <Description>PrimeFuncPack Dependency Registry is a library for .NET providing the dependency registrar targeted to both usual services and dependency trees build by PrimeFuncPack Dependency to register the dependencies in the .NET dependency injection mechanism.</Description>
     <RootNamespace>PrimeFuncPack</RootNamespace>
     <AssemblyName>PrimeFuncPack.DependencyRegistry</AssemblyName>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="1.2.0" />
+    <PackageReference Include="PrimeFuncPack.Dependency.Core" Version="1.2.1" />
   </ItemGroup>
 
 </Project>
