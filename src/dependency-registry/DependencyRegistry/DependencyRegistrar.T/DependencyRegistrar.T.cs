@@ -17,5 +17,11 @@ namespace PrimeFuncPack
             this.services = services;
             this.resolver = resolver;
         }
+
+        public static DependencyRegistrar<T> Create(IServiceCollection services, Func<IServiceProvider, T> resolver)
+            =>
+            new(
+                services ?? throw new ArgumentNullException(nameof(services)),
+                resolver ?? throw new ArgumentNullException(nameof(resolver)));
     }
 }
