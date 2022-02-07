@@ -22,7 +22,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
+        include-prerelease: false
 
     - name: Create Local NuGet Directory
       run: mkdir ~/nuget
@@ -38,13 +38,13 @@ jobs:
 
     - name: Pack DependencyRegistry
       run: dotnet pack ./src/*/*/DependencyRegistry.csproj --no-restore -o ~/nuget  -c Release
-      
+
     - name: Restore DependencyRegistry.Tests
       run: dotnet restore ./src/*/*/DependencyRegistry.Tests.csproj
 
     - name: Test DependencyRegistry.Tests
       run: dotnet test ./src/*/*/DependencyRegistry.Tests.csproj --no-restore  -c Release
-      
+
     - name: Push Packages
       if: ${{ github.event_name == 'release' }}
       run: dotnet nuget push "../../../nuget/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetSourcePassword }} --skip-duplicate
