@@ -1,9 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace PrimeFuncPack
+namespace PrimeFuncPack;
+
+partial class DependencyRegistrar<T>
 {
-    partial class DependencyRegistrar<T>
-    {
-        public IServiceCollection RegisterSingleton() => services.AddSingleton(resolver);
-    }
+    public IServiceCollection RegisterSingleton() => services.AddSingleton(resolver);
 }
