@@ -1,9 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace PrimeFuncPack
+namespace PrimeFuncPack;
+
+partial class DependencyRegistrar<T>
 {
-    partial class DependencyRegistrar<T>
-    {
-        public IServiceCollection RegisterTransient() => services.AddTransient(resolver);
-    }
+    public IServiceCollection RegisterTransient() => services.AddTransient(resolver);
 }
