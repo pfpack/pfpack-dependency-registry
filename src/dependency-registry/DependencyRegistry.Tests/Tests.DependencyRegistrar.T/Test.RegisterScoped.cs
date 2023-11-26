@@ -12,12 +12,12 @@ partial class DependencyRegistrarTypedTest
     [Theory]
     [InlineData(null)]
     [InlineData(SomeString)]
-    public void RegisterScoped_ExpectSourceServices(string regService)
+    public void RegisterScoped_ExpectSourceServices(string? regService)
     {
         var mockServices = MockServiceCollection.CreateMock();
         var sourceServices = mockServices.Object;
 
-        var registrar = DependencyRegistrar<string>.Create(sourceServices, _ => regService);
+        var registrar = DependencyRegistrar<string>.Create(sourceServices, _ => regService!);
 
         var actualServices = registrar.RegisterScoped();
         Assert.Same(sourceServices, actualServices);
