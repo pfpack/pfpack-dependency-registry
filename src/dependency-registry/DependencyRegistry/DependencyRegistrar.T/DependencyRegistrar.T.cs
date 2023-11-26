@@ -11,10 +11,8 @@ public sealed partial class DependencyRegistrar<T>
     private readonly Func<IServiceProvider, T> resolver;
 
     internal DependencyRegistrar(IServiceCollection services, Func<IServiceProvider, T> resolver)
-    {
-        this.services = services;
-        this.resolver = resolver;
-    }
+        =>
+        (this.services, this.resolver) = (services, resolver);
 
     public static DependencyRegistrar<T> Create(IServiceCollection services, Func<IServiceProvider, T> resolver)
         =>
