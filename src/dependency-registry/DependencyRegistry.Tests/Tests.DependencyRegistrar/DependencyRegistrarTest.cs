@@ -1,5 +1,5 @@
 namespace PrimeFuncPack.DependencyRegistry.Tests;
 
-public sealed partial class DependencyRegistrarTest
+public static partial class DependencyRegistrarTest
 {
 }
