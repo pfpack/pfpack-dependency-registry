@@ -10,8 +10,8 @@ internal static class MockServiceCollection
     {
         var mock = new Mock<IServiceCollection>();
 
-        var m = mock.Setup(s => s.Add(It.IsAny<ServiceDescriptor>()));
-        if (callback is object)
+        var m = mock.Setup(static s => s.Add(It.IsAny<ServiceDescriptor>()));
+        if (callback is not null)
         {
             _ = m.Callback(callback);
         }

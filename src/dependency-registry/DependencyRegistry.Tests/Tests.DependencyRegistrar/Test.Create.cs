@@ -5,13 +5,13 @@ using static PrimeFuncPack.UnitTest.TestData;
 
 namespace PrimeFuncPack.DependencyRegistry.Tests;
 
-partial class DependencyRegistrarTypedTest
+partial class DependencyRegistrarTest
 {
     [Fact]
     public static void Create_ServicesAreNull_ExpectArgumentNullException()
     {
         var ex = Assert.Throws<ArgumentNullException>(
-            () => _ = DependencyRegistrar<RefType>.Create(null!, _ => PlusFifteenIdRefType));
+            static () => _ = DependencyRegistrar.Create(null!, _ => PlusFifteenIdRefType));
 
         Assert.Equal("services", ex.ParamName);
     }
@@ -23,7 +23,7 @@ partial class DependencyRegistrarTypedTest
         var sourceServices = mockServices.Object;
 
         var ex = Assert.Throws<ArgumentNullException>(
-            () => _ = DependencyRegistrar<RecordType>.Create(sourceServices, null!));
+            () => _ = DependencyRegistrar.Create<RecordType>(sourceServices, null!));
 
         Assert.Equal("resolver", ex.ParamName);
     }
@@ -33,9 +33,9 @@ partial class DependencyRegistrarTypedTest
     {
         var mockServices = MockServiceCollection.CreateMock();
         var sourceServices = mockServices.Object;
-        Func<IServiceProvider, RecordType> sourceResolver = static _ => ZeroIdNullNameRecord;
+        Func<IServiceProvider, RefType> sourceResolver = static _ => PlusFifteenIdRefType;
 
-        var actual = DependencyRegistrar<RecordType>.Create(sourceServices, sourceResolver);
+        var actual = DependencyRegistrar.Create(sourceServices, sourceResolver);
 
         var actualServices = actual.GetInnerServices();
         Assert.Same(sourceServices, actualServices);
