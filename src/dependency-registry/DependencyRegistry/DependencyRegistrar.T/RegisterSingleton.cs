@@ -12,10 +12,7 @@ partial class DependencyRegistrar<T>
     public IServiceCollection RegisterKeyedSingleton(object serviceKey)
     {
         ArgumentNullException.ThrowIfNull(serviceKey);
-        return services.AddKeyedSingleton(serviceKey, InnerResolve);
 
-        T InnerResolve(IServiceProvider serviceProvider, object? _)
-            =>
-            resolver.Invoke(serviceProvider);
+        return services.AddKeyedSingleton(serviceKey, InnerResolve);
     }
 }

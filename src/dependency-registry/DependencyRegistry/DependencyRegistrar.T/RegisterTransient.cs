@@ -12,10 +12,7 @@ partial class DependencyRegistrar<T>
     public IServiceCollection RegisterKeyedTransient(object serviceKey)
     {
         ArgumentNullException.ThrowIfNull(serviceKey);
-        return services.AddKeyedTransient(serviceKey, InnerResolve);
 
-        T InnerResolve(IServiceProvider serviceProvider, object? _)
-            =>
-            resolver.Invoke(serviceProvider);
+        return services.AddKeyedTransient(serviceKey, InnerResolve);
     }
 }
