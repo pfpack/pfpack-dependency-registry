@@ -13,9 +13,5 @@ partial class DependencyRegistrar<T>
     {
         ArgumentNullException.ThrowIfNull(serviceKey);
         return services.AddKeyedScoped(serviceKey, InnerResolve);
-
-        T InnerResolve(IServiceProvider serviceProvider, object? _)
-            =>
-            resolver.Invoke(serviceProvider);
     }
 }

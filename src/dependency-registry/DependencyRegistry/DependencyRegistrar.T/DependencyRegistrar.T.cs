@@ -19,4 +19,8 @@ public sealed partial class DependencyRegistrar<T>
         new(
             services ?? throw new ArgumentNullException(nameof(services)),
             resolver ?? throw new ArgumentNullException(nameof(resolver)));
+
+    private T InnerResolve(IServiceProvider serviceProvider, object? _)
+        =>
+        resolver.Invoke(serviceProvider);
 }
