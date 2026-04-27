@@ -12,7 +12,6 @@ partial class DependencyRegistrar<T>
     public IServiceCollection RegisterKeyedScoped(object serviceKey)
     {
         ArgumentNullException.ThrowIfNull(serviceKey);
-
         return services.AddKeyedScoped(serviceKey, InnerResolve);
     }
 }

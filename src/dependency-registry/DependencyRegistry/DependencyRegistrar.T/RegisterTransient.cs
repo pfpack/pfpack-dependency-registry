@@ -12,7 +12,6 @@ partial class DependencyRegistrar<T>
     public IServiceCollection RegisterKeyedTransient(object serviceKey)
     {
         ArgumentNullException.ThrowIfNull(serviceKey);
-
         return services.AddKeyedTransient(serviceKey, InnerResolve);
     }
 }
