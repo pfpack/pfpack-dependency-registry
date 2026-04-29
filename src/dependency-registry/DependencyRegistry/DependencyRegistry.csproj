@@ -18,7 +18,7 @@
     <Description>PrimeFuncPack Dependency Registry is a library for .NET providing a dependency registrar intended for registering services, including dependency trees built by PrimeFuncPack Dependency, in the .NET dependency injection mechanism.</Description>
     <RootNamespace>PrimeFuncPack</RootNamespace>
     <AssemblyName>PrimeFuncPack.DependencyRegistry</AssemblyName>
-    <Version>2.2.0-preview.1</Version>
+    <Version>2.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
