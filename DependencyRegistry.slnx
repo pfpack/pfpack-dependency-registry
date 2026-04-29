@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/.sln/">
+    <File Path="./.github/workflows/dotnet.yml" />
+    <File Path="./LICENSE" />
+    <File Path="./.gitignore" />
+    <File Path="./README.md" />
+  </Folder>
+  <Project Path="src/dependency-registry/DependencyRegistry.Tests/DependencyRegistry.Tests.csproj" />
+  <Project Path="src/dependency-registry/DependencyRegistry/DependencyRegistry.csproj" />
+</Solution>
